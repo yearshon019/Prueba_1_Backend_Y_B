@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalle del dispositivo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .card-equal-height {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+    <img src="" alt="">
+  <div class="container mt-5">
+    <div class="row justify-content-center g-4">
+      <!-- Detalle del dispositivo -->
+      <div class="col-md-4 d-flex">
+        <div class="card shadow card-equal-height w-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Detalle del dispositivo</h5>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">{{ device.name }}</h6>
+            <p><strong>Categoría:</strong> {{ device.category.name }}</p>
+            <p><strong>Zona:</strong> {{ device.zone.name }}</p>
+            <p><strong>Consumo máximo:</strong> {{ device.maximum_consumption }} kWh</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mediciones recientes -->
+      <div class="col-md-4 d-flex">
+        <div class="card border-success card-equal-height w-100">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Mediciones recientes</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for m in measurements %}
+              <li class="list-group-item">
+                {{ m.date|date:"d/m/Y H:i" }} — {{ m.registered_consumption }} kWh
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No hay mediciones registradas.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Alertas -->
+      <div class="col-md-4 d-flex">
+        <div class="card border-danger card-equal-height w-100">
+          <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Alertas</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for a in alerts %}
+              <li class="list-group-item">
+                {{ a.date|date:"d/m/Y H:i" }} — <strong>{{ a.alert_level }}</strong>: {{ a.message }}
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No hay alertas registradas.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <a href="{% url 'dashboard' %}" class="btn btn-primary rounded-pill" style="width: 100px; height: 40px; ">
+        Volver
+      </a>
+      
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

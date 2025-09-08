@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Bootstrap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Mi Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="position-sticky pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard' %}">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'device_list' %}">Lista_disposistivo</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Usuarios</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Configuración</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <h2 class="mt-4">Dashboard</h2>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Dispositivos por categoría</h5>
+                <ul class="card-text">
+                  {% for cat in device_by_category %}
+                    <li>{{ cat.name }}: {{ cat.count }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Dispositivos por zona</h5>
+                <ul class="card-text">
+                  {% for zone in device_by_zone %}
+                    <li>{{ zone.name }}: {{ zone.count }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Alertas por severidad</h5>
+                <ul class="card-text">
+                  {% for alert in alerts_by_level %}
+                    <li>{{ alert.alert_level }}: {{ alert.count }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Últimas mediciones</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Dispositivo</th>
+              <th>Consumo</th>
+              <th>Fecha</th>
+              <th>Ver más</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in latest_measurements %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ m.device.name }}</td>
+                <td>{{ m.registered_consumption }} kWh</td>
+                <td>{{ m.date|date:"d/m/Y H:i" }}</td>
+                <td><a href="/dispositivos/{{ m.device.id }}/">Ver más</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
