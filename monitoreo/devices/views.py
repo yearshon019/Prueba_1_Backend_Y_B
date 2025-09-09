@@ -2,6 +2,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Device, Category, Measurement, Alert, Zone
 from django.db.models import Count
+from django.core.paginator import Paginator
+
 def dashboard(request):
     latest_measurements = Measurement.objects.select_related('device').order_by('-date')[:10]
     device_by_category = Category.objects.annotate(count=Count('device'))
@@ -15,8 +17,7 @@ def dashboard(request):
         'alerts_by_level': alerts_by_level,
     })
 
-from django.shortcuts import render, get_object_or_404
-from .models import Device, Measurement, Alert
+
 
 def device_detail(request, device_id):
     device = get_object_or_404(Device, id=device_id)
@@ -48,3 +49,11 @@ def device_list(request):
         'categories': categories,
         'selected_category': category_id
     })
+
+
+def measurement_list(request):
+    measurements = Measurement.objects.select_related('device').order_by('-date')
+    paginator = Paginator(measurements, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'device/measurement_list.html', {'page_obj': page_obj})

@@ -10,7 +10,7 @@
 
   <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Mi Dashboard</a>
+      <a class="navbar-brand" href="#">Dashboard</a>
     </div>
   </nav>
 
@@ -20,8 +20,8 @@
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard' %}">Inicio</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'device_list' %}">Lista_disposistivo</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Usuarios</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'device_list' %}">Lista de Categoria</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'measurement_list' %}">Lista de Mediciones</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Configuración</a></li>
           </ul>
         </div>
@@ -89,7 +89,7 @@
                 <td>{{ m.device.name }}</td>
                 <td>{{ m.registered_consumption }} kWh</td>
                 <td>{{ m.date|date:"d/m/Y H:i" }}</td>
-                <td><a href="/dispositivos/{{ m.device.id }}/">Ver más</a></td>
+                <td><a href="/devices/{{ m.device.id }}/">Ver más</a></td>
               </tr>
             {% endfor %}
           </tbody>
