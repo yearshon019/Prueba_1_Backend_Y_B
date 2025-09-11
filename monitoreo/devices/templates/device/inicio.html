@@ -14,6 +14,7 @@
     </div>
   </nav>
 
+
   <div class="container-fluid">
     <div class="row">
       <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -29,6 +30,21 @@
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <h2 class="mt-4">Dashboard</h2>
+
+        {% if not user.is_authenticated %}
+          <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <span>¿Quieres acceder a tu información personalizada?</span>
+            <div>
+              <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
+              <a href="{% url 'register' %}" class="btn btn-secondary btn-sm">Registrarse</a>
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-success">
+            Bienvenido, {{ user.username }} |
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
+          </div>
+        {% endif %}
 
         <div class="row">
           <div class="col-md-4">
@@ -57,19 +73,45 @@
             </div>
           </div>
 
+          <!-- Bloque de alertas por severidad (últimos 7 días) -->
           <div class="col-md-4">
             <div class="card text-white bg-warning mb-3">
               <div class="card-body">
-                <h5 class="card-title">Alertas por severidad</h5>
+                <h5 class="card-title">Alertas por severidad (últimos 7 días)</h5>
                 <ul class="card-text">
-                  {% for alert in alerts_by_level %}
-                    <li>{{ alert.alert_level }}: {{ alert.count }}</li>
+                  <li>Grave: {{ alerts_summary.Grave }}</li>
+                  <li>Alto: {{ alerts_summary.Alto }}</li>
+                  <li>Mediano: {{ alerts_summary.Mediano }}</li>
+                </ul>
+                <a class="btn btn-light btn-sm" href="{% url 'alerts_week' %}">
+                  Ver todas las alertas de la semana
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+                    <!-- Bloque de alertas recientes -->
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="card-title">Alertas recientes (últimos 7 días)</h5>
+                <ul class="list-group list-group-flush">
+                  {% for a in recent_alerts %}
+                    <li class="list-group-item">
+                      {{ a.date|date:"d/m/Y H:i" }} — 
+                      <strong>{{ a.alert_level }}</strong> — 
+                      {{ a.device.name }} — 
+                      {{ a.message }}
+                    </li>
+                  {% empty %}
+                    <li class="list-group-item text-muted">No hay alertas recientes.</li>
                   {% endfor %}
                 </ul>
               </div>
             </div>
           </div>
-        </div>
+
 
         <h3>Últimas mediciones</h3>
         <table class="table table-striped">
