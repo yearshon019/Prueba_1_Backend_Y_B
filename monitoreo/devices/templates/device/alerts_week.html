@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Alertas de la semana</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+  <h2>Alertas de la semana</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Dispositivo</th>
+        <th>Severidad</th>
+        <th>Mensaje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in alerts %}
+        <tr>
+          <td>{{ a.date|date:"d/m/Y H:i" }}</td>
+          <td>{{ a.device.name }}</td>
+          <td>{{ a.alert_level }}</td>
+          <td>{{ a.message }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted">No hay alertas esta semana.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'dashboard' %}" class="btn btn-primary rounded-pill">Volver al dashboard</a>
+</div>
+</body>
+</html>
