@@ -158,17 +158,22 @@ def device_list(request):
 
 @login_required
 def measurement_list(request):
-    org_id = _current_org(request)
-    measurements = (
-        Measurement.objects
-        .select_related("device")
-        .filter(organization_id=org_id, deleted_at__isnull=True)
-        .order_by("-date")
-    )
-    paginator = Paginator(measurements, 50)
-    page_number = request.GET.get("page")
+    # Tomamos el parámetro GET (default = desc)
+    sort = request.GET.get("sort", "desc")
+
+    if sort == "asc":
+        measurements = Measurement.objects.select_related('device').order_by('date')
+    else:
+        measurements = Measurement.objects.select_related('device').order_by('-date')
+
+    paginator = Paginator(measurements, 50)  # 50 por página
+    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, "device/measurement_list.html", {"page_obj": page_obj})
+
+    return render(request, 'device/measurement_list.html', {
+        'page_obj': page_obj,
+        'sort': sort,  # lo pasamos al template para mantener la selección
+    })
 
 
 
